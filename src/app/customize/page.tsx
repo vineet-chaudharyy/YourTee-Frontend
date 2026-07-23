@@ -198,6 +198,9 @@ export default function CustomizePage() {
   const [pricePerDesign, setPricePerDesign] = useState(200);
   const [embroideryPremium, setEmbroideryPremium] = useState(350);
   const [puffPremium, setPuffPremium] = useState(250);
+  const [heavyCottonPrice, setHeavyCottonPrice] = useState(0);
+  const [oversizedBoxyPrice, setOversizedBoxyPrice] = useState(400);
+  const [supimaLuxuryPrice, setSupimaLuxuryPrice] = useState(800);
 
   useEffect(() => {
     fetch("/api/admin/customizer-settings")
@@ -211,6 +214,9 @@ export default function CustomizePage() {
           setPricePerDesign(data.settings.designPrice);
           setEmbroideryPremium(data.settings.embroiderySurcharge);
           setPuffPremium(data.settings.puffSurcharge);
+          setHeavyCottonPrice(data.settings.heavyCottonPrice);
+          setOversizedBoxyPrice(data.settings.oversizedBoxyPrice);
+          setSupimaLuxuryPrice(data.settings.supimaLuxuryPrice);
         }
       })
       .catch((err) => console.warn("Failed to load customizer pricing settings, using defaults.", err));
@@ -545,9 +551,17 @@ export default function CustomizePage() {
   const graphicCount = layers.filter((l) => l.type === "graphic").length;
   const designCount = layers.filter((l) => l.type === "design").length;
   const styleSurcharge = printStyle === "embroidery" ? embroideryPremium : printStyle === "puff" ? puffPremium : 0;
+  const selectedFabricPrice =
+    fabric.name === "Heavy Cotton"
+      ? heavyCottonPrice
+      : fabric.name === "Oversized Boxy"
+      ? oversizedBoxyPrice
+      : fabric.name === "Supima Luxury"
+      ? supimaLuxuryPrice
+      : 0;
   const unit =
     basePrice +
-    fabric.price +
+    selectedFabricPrice +
     textCount * pricePerText +
     imgCount * pricePerImage +
     graphicCount * pricePerGraphic +
@@ -1441,7 +1455,11 @@ export default function CustomizePage() {
           <div className="rounded-xl border border-ink/10 bg-card p-5">
             <p className="mb-3.5 text-[10px] uppercase tracking-wider text-muted font-bold">Select Fabric Specification</p>
             <div className="grid grid-cols-3 gap-2.5">
-              {FABRICS.map((f) => (
+              {[
+                { name: "Heavy Cotton", weight: "240 GSM", price: heavyCottonPrice },
+                { name: "Oversized Boxy", weight: "280 GSM", price: oversizedBoxyPrice },
+                { name: "Supima Luxury", weight: "200 GSM", price: supimaLuxuryPrice },
+              ].map((f) => (
                 <button
                   key={f.name}
                   type="button"

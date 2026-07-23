@@ -11,6 +11,9 @@ export default function AdminCustomizerSettings() {
   const [designPrice, setDesignPrice] = useState("200");
   const [embroiderySurcharge, setEmbroiderySurcharge] = useState("350");
   const [puffSurcharge, setPuffSurcharge] = useState("250");
+  const [heavyCottonPrice, setHeavyCottonPrice] = useState("0");
+  const [oversizedBoxyPrice, setOversizedBoxyPrice] = useState("400");
+  const [supimaLuxuryPrice, setSupimaLuxuryPrice] = useState("800");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -29,6 +32,9 @@ export default function AdminCustomizerSettings() {
           setDesignPrice(String(data.settings.designPrice));
           setEmbroiderySurcharge(String(data.settings.embroiderySurcharge));
           setPuffSurcharge(String(data.settings.puffSurcharge));
+          setHeavyCottonPrice(String(data.settings.heavyCottonPrice));
+          setOversizedBoxyPrice(String(data.settings.oversizedBoxyPrice));
+          setSupimaLuxuryPrice(String(data.settings.supimaLuxuryPrice));
         }
       })
       .catch((err) => console.error("Failed to load settings:", err))
@@ -53,6 +59,9 @@ export default function AdminCustomizerSettings() {
           designPrice: Number(designPrice),
           embroiderySurcharge: Number(embroiderySurcharge),
           puffSurcharge: Number(puffSurcharge),
+          heavyCottonPrice: Number(heavyCottonPrice),
+          oversizedBoxyPrice: Number(oversizedBoxyPrice),
+          supimaLuxuryPrice: Number(supimaLuxuryPrice),
         }),
       });
 
@@ -169,6 +178,51 @@ export default function AdminCustomizerSettings() {
                 min="0"
               />
               <p className="mt-1.5 text-[9px] text-muted">Price added per dynamic pre-designed template selection.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-ink/10 bg-card p-6 space-y-5">
+          <h3 className="font-serif text-lg text-ink font-light border-b border-ink/5 pb-3">Fabric Specification Surcharges (₹)</h3>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="text-[10px] uppercase tracking-wider text-muted font-semibold block">Heavy Cotton (₹)</label>
+              <input
+                type="number"
+                value={heavyCottonPrice}
+                onChange={(e) => setHeavyCottonPrice(e.target.value)}
+                className="mt-2 w-full border border-ink/15 bg-surface px-4 py-3 text-xs outline-none focus:border-gold rounded font-mono"
+                required
+                min="0"
+              />
+              <p className="mt-1.5 text-[9px] text-muted">Surcharge applied for Heavy Cotton (240 GSM) specification.</p>
+            </div>
+
+            <div>
+              <label className="text-[10px] uppercase tracking-wider text-muted font-semibold block">Oversized Boxy (₹)</label>
+              <input
+                type="number"
+                value={oversizedBoxyPrice}
+                onChange={(e) => setOversizedBoxyPrice(e.target.value)}
+                className="mt-2 w-full border border-ink/15 bg-surface px-4 py-3 text-xs outline-none focus:border-gold rounded font-mono"
+                required
+                min="0"
+              />
+              <p className="mt-1.5 text-[9px] text-muted">Surcharge applied for Oversized Boxy (280 GSM) specification.</p>
+            </div>
+
+            <div>
+              <label className="text-[10px] uppercase tracking-wider text-muted font-semibold block">Supima Luxury (₹)</label>
+              <input
+                type="number"
+                value={supimaLuxuryPrice}
+                onChange={(e) => setSupimaLuxuryPrice(e.target.value)}
+                className="mt-2 w-full border border-ink/15 bg-surface px-4 py-3 text-xs outline-none focus:border-gold rounded font-mono"
+                required
+                min="0"
+              />
+              <p className="mt-1.5 text-[9px] text-muted">Surcharge applied for Supima Luxury (200 GSM) specification.</p>
             </div>
           </div>
         </div>

@@ -190,6 +190,32 @@ export default function CustomizePage() {
   // User design description state
   const [customDescription, setCustomDescription] = useState("");
 
+  // Dynamic Pricing Constants loaded from DB
+  const [basePrice, setBasePrice] = useState(1499);
+  const [pricePerText, setPricePerText] = useState(200);
+  const [pricePerImage, setPricePerImage] = useState(500);
+  const [pricePerGraphic, setPricePerGraphic] = useState(150);
+  const [pricePerDesign, setPricePerDesign] = useState(200);
+  const [embroideryPremium, setEmbroideryPremium] = useState(350);
+  const [puffPremium, setPuffPremium] = useState(250);
+
+  useEffect(() => {
+    fetch("/api/admin/customizer-settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.settings) {
+          setBasePrice(data.settings.basePrice);
+          setPricePerText(data.settings.textPrice);
+          setPricePerImage(data.settings.imagePrice);
+          setPricePerGraphic(data.settings.graphicPrice);
+          setPricePerDesign(data.settings.designPrice);
+          setEmbroideryPremium(data.settings.embroiderySurcharge);
+          setPuffPremium(data.settings.puffSurcharge);
+        }
+      })
+      .catch((err) => console.warn("Failed to load customizer pricing settings, using defaults.", err));
+  }, []);
+
   // Keyboard listeners for fine-tuning layer positioning
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -518,14 +544,14 @@ export default function CustomizePage() {
   const imgCount = layers.filter((l) => l.type === "image").length;
   const graphicCount = layers.filter((l) => l.type === "graphic").length;
   const designCount = layers.filter((l) => l.type === "design").length;
-  const styleSurcharge = printStyle === "embroidery" ? 350 : printStyle === "puff" ? 250 : 0;
+  const styleSurcharge = printStyle === "embroidery" ? embroideryPremium : printStyle === "puff" ? puffPremium : 0;
   const unit =
-    1499 +
+    basePrice +
     fabric.price +
-    textCount * 200 +
-    imgCount * 500 +
-    graphicCount * 150 +
-    designCount * 200 +
+    textCount * pricePerText +
+    imgCount * pricePerImage +
+    graphicCount * pricePerGraphic +
+    designCount * pricePerDesign +
     styleSurcharge;
   const total = unit * qty;
 

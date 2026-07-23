@@ -15,6 +15,7 @@ import {
   ShoppingBag,
   RotateCcw,
   Sparkles,
+  Sliders,
 } from "lucide-react";
 import { LogoMark, Wordmark } from "@/components/ui/Logo";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -28,6 +29,7 @@ const nav = [
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/returns", label: "Returns", icon: RotateCcw },
   { href: "/admin/hero", label: "Hero Banner", icon: Sparkles },
+  { href: "/admin/customizer", label: "Customizer Settings", icon: Sliders },
 ];
 
 export function AdminShell({

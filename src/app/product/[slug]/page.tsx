@@ -91,16 +91,6 @@ export default function ProductPage() {
       .finally(() => setLoading(false));
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <span className="text-xs uppercase tracking-wider text-muted animate-pulse">Loading Product Details...</span>
-      </div>
-    );
-  }
-
-  if (!product) return notFound();
-
   const variantKey = `${color}-${size}`;
   const activeStock = (product && product.variantStock) 
     ? (product.variantStock[variantKey] !== undefined ? Number(product.variantStock[variantKey]) : 50) 
@@ -111,6 +101,16 @@ export default function ProductPage() {
       setQty(activeStock);
     }
   }, [color, size, activeStock, qty]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <span className="text-xs uppercase tracking-wider text-muted animate-pulse">Loading Product Details...</span>
+      </div>
+    );
+  }
+
+  if (!product) return notFound();
 
   const related = productsList.filter((p) => p.id !== product.id).slice(0, 4);
   const saved = wishlist.includes(product.id);

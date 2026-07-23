@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   YourTee — Theme tokens (RGB triplets for Tailwind alpha)
+   ============================================================ */
+:root {
+  /* Light mode — premium warm ivory & champagne gold (default) */
+  --bg: 248 246 241;
+  --surface: 253 251 247;
+  --card: 255 255 255;
+  --ink: 26 24 20;
+  --muted: 122 116 106;
+  --line: 26 24 20; /* used at low alpha */
+  --line-alpha: 0.1;
+  /* A deeper gold that stays legible on light surfaces */
+  --gold-ink: 158 122 42;
+}
+
+.dark {
+  --gold-ink: 212 175 55;
+}
+
+.dark {
+  /* Dark mode — premium black & gold */
+  --bg: 8 8 8;
+  --surface: 18 18 18;
+  --card: 24 24 24;
+  --ink: 255 255 255;
+  --muted: 176 176 176;
+  --line: 255 255 255;
+  --line-alpha: 0.08;
+}
+
+* {
+  border-color: rgb(var(--line) / var(--line-alpha));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--ink));
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--bg));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--muted) / 0.3);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
+::selection {
+  background: #d4af37;
+  color: #080808;
+}
+
+@layer components {
+  .container-luxe {
+    @apply mx-auto w-full max-w-[1400px] px-6 md:px-10 lg:px-16;
+  }
+
+  .eyebrow {
+    @apply text-xs font-medium uppercase tracking-luxe text-gold;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 bg-gold px-8 py-4 text-xs font-semibold uppercase tracking-luxe text-[#080808] transition-all duration-300 hover:bg-gold-soft hover:shadow-[0_0_40px_-8px_rgba(212,175,55,0.6)] hover:scale-[1.015] active:scale-[0.985];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 border border-ink/30 px-8 py-4 text-xs font-semibold uppercase tracking-luxe text-ink transition-all duration-300 hover:border-gold hover:text-gold hover:scale-[1.015] active:scale-[0.985];
+  }
+
+  .hairline {
+    @apply h-px w-full bg-ink/10;
+  }
+
+  .auth-input {
+    @apply w-full border border-ink/15 bg-transparent px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted focus:border-gold;
+  }
+}
+
+@layer utilities {
+  .text-shimmer {
+    background: linear-gradient(
+      90deg,
+      #c7a86a 0%,
+      #d4af37 25%,
+      #fff8e1 50%,
+      #d4af37 75%,
+      #c7a86a 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    @apply animate-shimmer;
+  }
+
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  }
+}
+
+/* ------------------------------------------------------------------
+   CSS-driven hero entrance — starts at paint time (not JS hydration),
+   so the LCP text is painted early for a fast Lighthouse LCP.
+   ------------------------------------------------------------------ */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes hero-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.hero-fade-up {
+  animation: hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-rise {
+  display: inline-block;
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: page-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes scrollpulse {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.animate-scrollpulse {
+  animation: scrollpulse 2s ease-in-out infinite;
+}
+@keyframes kenburns {
+  0% {
+    transform: scale(1.02) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate(-1.5%, -1%);
+  }
+}
+.animate-kenburns {
+  animation: kenburns 20s ease-in-out infinite alternate;
+}
+@keyframes glowdrift {
+  0%,
+  100% {
+    transform: translate(-10%, -10%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(10%, 5%) scale(1.25);
+    opacity: 0.8;
+  }
+}
+.animate-glowdrift {
+  animation: glowdrift 14s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-kenburns,
+  .animate-glowdrift,
+  .animate-scrollpulse,
+  .animate-float {
+    animation: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade-up,
+  .hero-rise,
+  .page-enter {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   YourTee — Global Premium Aesthetics Updates
+   ============================================================ */
+
+/* 1. Global blueprint design grid */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background-image: 
+    linear-gradient(to right, rgb(var(--line) / 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--line) / 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* 2. Gold blinking carets for premium feel inputs */
+input, textarea, select {
+  caret-color: #d4af37;
+}
+
+/* 3. Global organic paper/fabric noise grain overlay */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}

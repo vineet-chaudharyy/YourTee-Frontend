@@ -648,22 +648,45 @@ export default function CustomizePage() {
     }
 
     setSaving(true);
-    let previewUrl = null;
+    let previewUrl = "";
+    let backPreviewUrl = "";
 
     if (shirtRef.current) {
       try {
         setSelected(null);
         setIsCapturing(true);
-        await new Promise((resolve) => setTimeout(resolve, 120));
 
-        const canvas = await html2canvas(shirtRef.current, {
+        const originalSide = side;
+
+        // 1. Force switch to front side first to guarantee front preview
+        setSide("front");
+        setRotationAngle(0);
+        await new Promise((resolve) => setTimeout(resolve, 145));
+
+        const canvasFront = await html2canvas(shirtRef.current, {
           backgroundColor: null,
           logging: false,
           useCORS: true,
           scale: 3,
         });
-        previewUrl = canvas.toDataURL("image/png");
+        previewUrl = canvasFront.toDataURL("image/png");
 
+        // 2. Force switch to back side and capture back preview
+        setSide("back");
+        setRotationAngle(180);
+        await new Promise((resolve) => setTimeout(resolve, 145));
+
+        const canvasBack = await html2canvas(shirtRef.current, {
+          backgroundColor: null,
+          logging: false,
+          useCORS: true,
+          scale: 3,
+        });
+        backPreviewUrl = canvasBack.toDataURL("image/png");
+
+        // Restore original side state
+        setSide(originalSide);
+        setRotationAngle(originalSide === "front" ? 0 : originalSide === "back" ? 180 : 0);
         setIsCapturing(false);
       } catch (err) {
         console.error("Failed to generate design preview:", err);
@@ -679,6 +702,7 @@ export default function CustomizePage() {
       price: unit,
       layers,
       preview: previewUrl,
+      previewBack: backPreviewUrl,
     };
 
     if (user) {
@@ -698,7 +722,7 @@ export default function CustomizePage() {
     } else {
       localStorage.setItem(
         "yourtee-design",
-        JSON.stringify({ layers, shirt, fabric, preview: previewUrl })
+        JSON.stringify({ layers, shirt, fabric, preview: previewUrl, previewBack: backPreviewUrl })
       );
       showToast("Saved on this device — sign in to save to your account");
       setSaving(false);

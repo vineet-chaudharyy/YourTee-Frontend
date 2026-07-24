@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Palette, CheckCircle, AlertCircle, ShoppingBag, Trash2, Edit3, Eye, X } from "lucide-react";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, cn } from "@/lib/utils";
 
 type Row = {
   id: string;
@@ -12,6 +12,7 @@ type Row = {
   fabric: string;
   price: number;
   preview: string | null;
+  previewBack?: string | null;
   user: { name: string; email: string };
   createdAt: string;
 };
@@ -46,7 +47,7 @@ export default function AdminDesigns() {
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
   
   // Customizer admin management states
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [lightboxImages, setLightboxImages] = useState<{ front: string; back: string | null } | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingDesign, setEditingDesign] = useState<Row | null>(null);
   const [editName, setEditName] = useState("");
@@ -228,22 +229,35 @@ export default function AdminDesigns() {
               <div key={d.id} className="border border-ink/10 bg-card flex flex-col justify-between">
                 <div>
                   <div
-                    onClick={() => d.preview && setPreviewImage(d.preview)}
-                    className={`relative aspect-square overflow-hidden bg-surface border-b border-ink/10 group ${
-                      d.preview ? "cursor-zoom-in" : ""
-                    }`}
+                    onClick={() => {
+                      if (d.preview) {
+                        setLightboxImages({ front: d.preview, back: d.previewBack || null });
+                      }
+                    }}
+                    className="relative aspect-square overflow-hidden bg-surface border-b border-ink/10 group cursor-zoom-in"
                   >
                     {d.preview ? (
                       <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        {/* Front View */}
                         <img
                           src={d.preview}
                           alt={d.name}
-                          className="h-full w-full object-contain"
+                          className={cn(
+                            "absolute inset-0 h-full w-full object-contain transition-opacity duration-500",
+                            d.previewBack ? "group-hover:opacity-0" : ""
+                          )}
                         />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* Back View (Cross-fade on hover) */}
+                        {d.previewBack && (
+                          <img
+                            src={d.previewBack}
+                            alt={`${d.name} Back`}
+                            className="absolute inset-0 h-full w-full object-contain opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
                           <span className="flex items-center gap-1.5 border border-white px-3 py-1.5 text-[10px] uppercase tracking-wider text-white">
-                            <Eye size={12} /> Preview
+                            <Eye size={12} /> Preview Both Sides
                           </span>
                         </div>
                       </>
@@ -297,21 +311,41 @@ export default function AdminDesigns() {
       )}
 
       {/* Lightbox Preview Modal */}
-      {previewImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+      {lightboxImages && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 md:p-10 overflow-y-auto">
           <button
-            onClick={() => setPreviewImage(null)}
-            className="absolute top-6 right-6 text-white/70 hover:text-white"
+            onClick={() => setLightboxImages(null)}
+            className="absolute top-6 right-6 text-white/70 hover:text-white z-10 bg-zinc-900 border border-zinc-800 p-2.5 rounded-full transition-colors"
           >
-            <X size={28} />
+            <X size={24} />
           </button>
-          <div className="relative max-h-[85vh] max-w-[85vw] aspect-square overflow-hidden bg-zinc-900 border border-zinc-800 p-6 rounded-xl shadow-2xl flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={previewImage}
-              alt="Design Preview"
-              className="h-full w-full object-contain max-h-[80vh] max-w-[80vw]"
-            />
+          
+          <div className="flex flex-col md:flex-row gap-6 max-w-5xl w-full my-auto items-center justify-center">
+            {/* Front View Card */}
+            <div className="relative flex-1 bg-zinc-950 border border-zinc-800 p-6 rounded-xl shadow-2xl flex flex-col items-center gap-3 w-full">
+              <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Front Look</span>
+              <div className="relative w-full aspect-square max-h-[60vh] flex items-center justify-center">
+                <img
+                  src={lightboxImages.front}
+                  alt="Front Design Preview"
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Back View Card */}
+            {lightboxImages.back && (
+              <div className="relative flex-1 bg-zinc-950 border border-zinc-800 p-6 rounded-xl shadow-2xl flex flex-col items-center gap-3 w-full">
+                <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Back Look</span>
+                <div className="relative w-full aspect-square max-h-[60vh] flex items-center justify-center">
+                  <img
+                    src={lightboxImages.back}
+                    alt="Back Design Preview"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -328,8 +328,8 @@ export default function AdminOrders() {
       </div>
       {/* Dynamic Design Review Lightbox Modal */}
       {selectedReviewItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0c0a06]/85 backdrop-blur-md p-4 overflow-y-auto">
-          <div className="relative w-full max-w-5xl rounded-2xl border border-ink/10 bg-bg p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex justify-center items-start bg-[#0c0a06]/85 backdrop-blur-md p-4 md:p-10 overflow-y-auto">
+          <div className="relative w-full max-w-5xl my-auto rounded-2xl border border-ink/10 bg-bg p-6 md:p-8 shadow-2xl space-y-6">
             {/* Close Button */}
             <button
               onClick={() => setSelectedReviewItem(null)}

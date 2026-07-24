@@ -576,25 +576,46 @@ export default function CustomizePage() {
       return;
     }
 
-    let previewUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80";
+    let previewUrl = "";
+    let backPreviewUrl = "";
 
     if (shirtRef.current) {
       try {
         // Deselect layer to hide dashed border lines in the preview
         setSelected(null);
         setIsCapturing(true);
-        
-        // Wait for React re-render and browser paint cycle to display flat unrotated t-shirt
-        await new Promise((resolve) => setTimeout(resolve, 120));
 
-        const canvas = await html2canvas(shirtRef.current, {
+        const originalSide = side;
+
+        // 1. Force switch to front side first to guarantee front preview
+        setSide("front");
+        setRotationAngle(0);
+        await new Promise((resolve) => setTimeout(resolve, 145));
+
+        const canvasFront = await html2canvas(shirtRef.current, {
           backgroundColor: null,
           logging: false,
           useCORS: true,
           scale: 3,
         });
-        previewUrl = canvas.toDataURL("image/png");
+        previewUrl = canvasFront.toDataURL("image/png");
 
+        // 2. Force switch to back side and capture back preview
+        setSide("back");
+        setRotationAngle(180);
+        await new Promise((resolve) => setTimeout(resolve, 145));
+
+        const canvasBack = await html2canvas(shirtRef.current, {
+          backgroundColor: null,
+          logging: false,
+          useCORS: true,
+          scale: 3,
+        });
+        backPreviewUrl = canvasBack.toDataURL("image/png");
+
+        // Restore original side state
+        setSide(originalSide);
+        setRotationAngle(originalSide === "front" ? 0 : originalSide === "back" ? 180 : 0);
         setIsCapturing(false);
       } catch (err) {
         console.error("Failed to generate design preview:", err);
@@ -608,11 +629,13 @@ export default function CustomizePage() {
       name: `Custom Tee (${printStyle === "dtg" ? "Classic" : printStyle === "embroidery" ? "Embroidery" : "Puff Print"}) — ${shirt.name}`,
       price: unit,
       image: previewUrl,
+      backImage: backPreviewUrl,
       color: shirt.name,
       size: "M",
       quantity: qty,
       custom: true,
       description: customDescription.trim() || null,
+      layers: layers,
     });
     showToast("Custom design added to bag");
   };

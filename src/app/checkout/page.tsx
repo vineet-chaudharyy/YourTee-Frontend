@@ -61,10 +61,12 @@ export default function CheckoutPage() {
             name: i.name,
             price: i.price,
             image: i.image,
+            backImage: i.backImage || null,
             color: i.color,
             size: i.size,
             quantity: i.quantity,
-            description: i.description || null
+            description: i.description || null,
+            layers: i.layers || null
           })),
           subtotal: order.subtotal,
           shipping: order.shipping,

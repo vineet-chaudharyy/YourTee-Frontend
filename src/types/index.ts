@@ -32,11 +32,13 @@ export type CartItem = {
   name: string;
   price: number;
   image: string;
+  backImage?: string | null;
   color: string;
   size: string;
   quantity: number;
   custom?: boolean;
   description?: string | null;
+  layers?: any[] | null;
 };
 
 export type OrderStatus =

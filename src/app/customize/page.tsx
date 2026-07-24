@@ -806,7 +806,7 @@ export default function CustomizePage() {
         
         {/* LEFT COLUMN: 360° Live Interactive Preview Viewport */}
         <div className="flex flex-col items-center lg:sticky lg:top-32">
-          <div className="relative w-full flex flex-col items-center rounded-xl border border-ink/10 bg-card/65 backdrop-blur-md p-8 min-h-[520px] justify-center overflow-hidden">
+          <div className="relative w-full flex flex-col items-center rounded-xl border border-ink/10 bg-card/65 backdrop-blur-md p-4 sm:p-8 min-h-[440px] sm:min-h-[520px] justify-center overflow-hidden">
             {/* 360° View Toggles */}
             <div className="absolute top-6 flex items-center gap-1 rounded-full border border-ink/10 p-1 bg-[#0c0a06]/90 backdrop-blur-sm z-20">
               {(["front", "back"] as Side[]).map((s) => (

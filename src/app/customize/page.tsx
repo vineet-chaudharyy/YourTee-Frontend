@@ -1450,7 +1450,7 @@ export default function CustomizePage() {
           {/* C. Luxury Swatch Color Picker */}
           <div className="rounded-xl border border-ink/10 bg-card p-5">
             <p className="mb-3.5 text-[10px] uppercase tracking-wider text-muted font-bold">Choose Fabric Shade</p>
-            <div className="grid grid-cols-6 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
               {SHIRT_COLORS.map((c) => (
                 <button
                   key={c.name}
@@ -1474,7 +1474,7 @@ export default function CustomizePage() {
           {/* D. Print Technique Selection */}
           <div className="rounded-xl border border-ink/10 bg-card p-5">
             <p className="mb-3.5 text-[10px] uppercase tracking-wider text-muted font-bold">Print Technique</p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {[
                 { id: "dtg", label: "Classic Ink", desc: "No charge" },
                 { id: "embroidery", label: "Embroidery", desc: "+₹350" },
@@ -1501,7 +1501,7 @@ export default function CustomizePage() {
           {/* E. Premium Fabric Cards (Hover Translate) */}
           <div className="rounded-xl border border-ink/10 bg-card p-5">
             <p className="mb-3.5 text-[10px] uppercase tracking-wider text-muted font-bold">Select Fabric Specification</p>
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               {[
                 { name: "Heavy Cotton", weight: "240 GSM", price: heavyCottonPrice },
                 { name: "Oversized Boxy", weight: "280 GSM", price: oversizedBoxyPrice },
@@ -1694,7 +1694,7 @@ function ShirtMock({ color, side, noTransition = false }: { color: string; side:
   if (isLeft || isRight) {
     // Stylized sleeve silhouette path
     return (
-      <svg width="300" height="340" viewBox="0 0 300 340" fill="none" className={transitionClass}>
+      <svg width="100%" height="100%" viewBox="0 0 300 340" fill="none" className={cn("w-full h-auto max-w-[300px] max-h-[340px]", transitionClass)}>
         <defs>
           <filter id="mock-shadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#000000" floodOpacity="0.08" />
@@ -1727,7 +1727,7 @@ function ShirtMock({ color, side, noTransition = false }: { color: string; side:
   }
 
   return (
-    <svg width="300" height="340" viewBox="0 0 300 340" fill="none" className={transitionClass}>
+    <svg width="100%" height="100%" viewBox="0 0 300 340" fill="none" className={cn("w-full h-auto max-w-[300px] max-h-[340px]", transitionClass)}>
       <defs>
         <filter id="mock-shadow-full" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="12" stdDeviation="16" floodColor="#000000" floodOpacity="0.08" />

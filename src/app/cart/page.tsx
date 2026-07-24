@@ -7,9 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Minus, Plus, X, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
+import type { CartItem } from "@/types";
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
+  const [previewItem, setPreviewItem] = useState<CartItem | null>(null);
   const items = useCart((s) => s.items);
   const updateQty = useCart((s) => s.updateQty);
   const removeItem = useCart((s) => s.removeItem);
@@ -63,6 +65,14 @@ export default function CartPage() {
                             {item.color} · {item.size}
                             {item.custom && <span className="text-gold"> · Custom</span>}
                           </p>
+                          {item.custom && (
+                            <button
+                              onClick={() => setPreviewItem(item)}
+                              className="mt-2.5 block text-[10px] uppercase tracking-widest text-gold hover:text-gold/80 hover:underline font-semibold"
+                            >
+                              🔍 Preview Design
+                            </button>
+                          )}
                         </div>
                         <button
                           onClick={() => removeItem(item.key)}
@@ -129,6 +139,71 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      {/* Dynamic Cart Item Preview Modal */}
+      {previewItem && (
+        <div className="fixed inset-0 z-50 flex justify-center items-start bg-[#0c0a06]/85 backdrop-blur-md p-4 md:p-10 overflow-y-auto">
+          <div className="relative w-full max-w-4xl my-auto rounded-2xl border border-ink/10 bg-bg p-6 md:p-8 shadow-2xl space-y-6">
+            {/* Close Button */}
+            <button
+              onClick={() => setPreviewItem(null)}
+              className="absolute top-6 right-6 text-muted hover:text-ink text-xs font-semibold uppercase tracking-wider bg-[#0c0a06]/5 border border-ink/10 px-3 py-1.5 rounded transition-all"
+            >
+              ✕ Close
+            </button>
+
+            {/* Header */}
+            <div>
+              <p className="eyebrow text-gold font-bold">Your Custom Tee</p>
+              <h2 className="mt-1 font-serif text-2xl font-light text-ink">{previewItem.name}</h2>
+              <p className="text-xs text-muted mt-1 uppercase tracking-wide">
+                Color: {previewItem.color} · Size: {previewItem.size} · Quantity: {previewItem.quantity}
+              </p>
+            </div>
+
+            {/* Grid */}
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Front Look */}
+              <div className="rounded-xl border border-ink/10 bg-card p-4 space-y-3 flex flex-col items-center">
+                <span className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold">Front Look</span>
+                <div className="relative w-full aspect-[3/4] border border-ink/5 bg-[#0c0a06]/5 overflow-hidden flex items-center justify-center rounded-lg">
+                  {previewItem.image ? (
+                    <Image
+                      src={previewItem.image}
+                      alt="Front Look"
+                      fill
+                      className="object-contain p-2"
+                      unoptimized
+                    />
+                  ) : (
+                    <span className="text-xs text-muted">No front preview</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Back Look */}
+              <div className="rounded-xl border border-ink/10 bg-card p-4 space-y-3 flex flex-col items-center">
+                <span className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold">Back Look</span>
+                <div className="relative w-full aspect-[3/4] border border-ink/5 bg-[#0c0a06]/5 overflow-hidden flex items-center justify-center rounded-lg">
+                  {previewItem.backImage ? (
+                    <Image
+                      src={previewItem.backImage}
+                      alt="Back Look"
+                      fill
+                      className="object-contain p-2"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="text-center p-4">
+                      <span className="text-[10px] uppercase text-muted block">No back print</span>
+                      <span className="text-[8px] text-muted/65 mt-1 block">Tee is blank on rear</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

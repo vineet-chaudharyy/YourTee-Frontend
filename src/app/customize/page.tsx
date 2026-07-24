@@ -590,7 +590,7 @@ export default function CustomizePage() {
         // 1. Force switch to front side first to guarantee front preview
         setSide("front");
         setRotationAngle(0);
-        await new Promise((resolve) => setTimeout(resolve, 145));
+        await new Promise((resolve) => setTimeout(resolve, 350));
 
         const canvasFront = await html2canvas(shirtRef.current, {
           backgroundColor: null,
@@ -603,7 +603,7 @@ export default function CustomizePage() {
         // 2. Force switch to back side and capture back preview
         setSide("back");
         setRotationAngle(180);
-        await new Promise((resolve) => setTimeout(resolve, 145));
+        await new Promise((resolve) => setTimeout(resolve, 350));
 
         const canvasBack = await html2canvas(shirtRef.current, {
           backgroundColor: null,
@@ -661,7 +661,7 @@ export default function CustomizePage() {
         // 1. Force switch to front side first to guarantee front preview
         setSide("front");
         setRotationAngle(0);
-        await new Promise((resolve) => setTimeout(resolve, 145));
+        await new Promise((resolve) => setTimeout(resolve, 350));
 
         const canvasFront = await html2canvas(shirtRef.current, {
           backgroundColor: null,
@@ -674,7 +674,7 @@ export default function CustomizePage() {
         // 2. Force switch to back side and capture back preview
         setSide("back");
         setRotationAngle(180);
-        await new Promise((resolve) => setTimeout(resolve, 145));
+        await new Promise((resolve) => setTimeout(resolve, 350));
 
         const canvasBack = await html2canvas(shirtRef.current, {
           backgroundColor: null,
@@ -854,7 +854,7 @@ export default function CustomizePage() {
                 transition: isRotating || isCapturing ? "none" : "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
-              <ShirtMock color={shirt.hex} side={side} />
+              <ShirtMock color={shirt.hex} side={side} noTransition={isCapturing} />
               
               {/* Dynamic glare shine overlay */}
               {isHovered && (
@@ -1683,16 +1683,18 @@ function Slider({
   );
 }
 
-function ShirtMock({ color, side }: { color: string; side: Side }) {
+function ShirtMock({ color, side, noTransition = false }: { color: string; side: Side; noTransition?: boolean }) {
   const dark = color === "#101010" || color === "#1c2a38" || color === "#5c4033" || color === "#808080";
   const isBack = side === "back";
   const isLeft = side === "left";
   const isRight = side === "right";
 
+  const transitionClass = noTransition ? "" : "transition-all duration-500";
+
   if (isLeft || isRight) {
     // Stylized sleeve silhouette path
     return (
-      <svg width="300" height="340" viewBox="0 0 300 340" fill="none" className="transition-all duration-500">
+      <svg width="300" height="340" viewBox="0 0 300 340" fill="none" className={transitionClass}>
         <defs>
           <filter id="mock-shadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#000000" floodOpacity="0.08" />
@@ -1725,7 +1727,7 @@ function ShirtMock({ color, side }: { color: string; side: Side }) {
   }
 
   return (
-    <svg width="300" height="340" viewBox="0 0 300 340" fill="none" className="transition-all duration-500">
+    <svg width="300" height="340" viewBox="0 0 300 340" fill="none" className={transitionClass}>
       <defs>
         <filter id="mock-shadow-full" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="12" stdDeviation="16" floodColor="#000000" floodOpacity="0.08" />
